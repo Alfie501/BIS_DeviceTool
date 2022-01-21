@@ -16,7 +16,7 @@ namespace BIS_DeviceTool
         public DlgAreaEditor(List<Area> AreaList)
         {
             InitializeComponent();
-
+            //0823
             this.AreaList = AreaList;
         }
         private void Form1_Load(object sender, EventArgs e)
