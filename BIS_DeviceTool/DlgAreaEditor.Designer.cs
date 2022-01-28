@@ -28,9 +28,9 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle6 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(DlgAreaEditor));
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle5 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
             this.panel1 = new System.Windows.Forms.Panel();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.grp_Area = new System.Windows.Forms.GroupBox();
@@ -105,7 +105,7 @@
             this.dgv_Area.AllowUserToDeleteRows = false;
             this.dgv_Area.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
             this.dgv_Area.BackgroundColor = System.Drawing.Color.White;
-            this.dgv_Area.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.dgv_Area.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.DisableResizing;
             this.dgv_Area.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
             this.Column1,
             this.Column2,
@@ -120,7 +120,6 @@
             this.dgv_Area.Size = new System.Drawing.Size(328, 260);
             this.dgv_Area.TabIndex = 0;
             this.dgv_Area.CellDoubleClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgv_Area_CellDoubleClick);
-            this.dgv_Area.CellValueChanged += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgv_Area_CellValueChanged);
             // 
             // grp_Device
             // 
@@ -157,9 +156,9 @@
             // 
             // dataGridViewCheckBoxColumn1
             // 
-            dataGridViewCellStyle6.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            dataGridViewCellStyle6.NullValue = true;
-            this.dataGridViewCheckBoxColumn1.DefaultCellStyle = dataGridViewCellStyle6;
+            dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            dataGridViewCellStyle2.NullValue = true;
+            this.dataGridViewCheckBoxColumn1.DefaultCellStyle = dataGridViewCellStyle2;
             this.dataGridViewCheckBoxColumn1.FillWeight = 25F;
             this.dataGridViewCheckBoxColumn1.HeaderText = "";
             this.dataGridViewCheckBoxColumn1.Name = "dataGridViewCheckBoxColumn1";
@@ -244,9 +243,9 @@
             // 
             // Column1
             // 
-            dataGridViewCellStyle5.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            dataGridViewCellStyle5.NullValue = true;
-            this.Column1.DefaultCellStyle = dataGridViewCellStyle5;
+            dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            dataGridViewCellStyle1.NullValue = true;
+            this.Column1.DefaultCellStyle = dataGridViewCellStyle1;
             this.Column1.FillWeight = 25F;
             this.Column1.HeaderText = "";
             this.Column1.Name = "Column1";
@@ -260,7 +259,6 @@
             // 
             this.area_CommandName.HeaderText = "Command Name";
             this.area_CommandName.Name = "area_CommandName";
-            this.area_CommandName.ReadOnly = true;
             this.area_CommandName.Resizable = System.Windows.Forms.DataGridViewTriState.True;
             this.area_CommandName.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
             // 

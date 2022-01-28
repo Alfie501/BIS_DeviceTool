@@ -23,6 +23,7 @@ namespace BIS_DeviceTool
         Area currentName;
         Model CurrentCommand;
         Area temp_Area;
+        Command temp_cammand;
 
         bool IscurrentName = false;
         bool IsCurrentModel = false;        
@@ -45,7 +46,8 @@ namespace BIS_DeviceTool
                 //foreach (Model model in area.Models)
                 //    dgv_Device.Rows.Add(new object[] { true, model.Name, model.IP });
             }
-
+            this.dgv_Area.DataError += new DataGridViewDataErrorEventHandler(DataGridView1_DataError);
+                        
             //dgv_Area.Rows[2].Cells.Clear();       
             //Column3.Items.Add(string.Empty);
             //foreach (Command command in CommandList)
@@ -54,7 +56,16 @@ namespace BIS_DeviceTool
             //    Column3.Items.Add(command.Name);
             //}
 
-        }        
+        }
+        private void DataGridView1_DataError(object sender, DataGridViewDataErrorEventArgs e)
+        {
+            // If the data source raises an exception when a cell value is
+            // commited, display an error message.
+            if (e.Exception != null && e.Context == DataGridViewDataErrorContexts.Commit)
+            {
+                MessageBox.Show("uh...");
+            }
+        }
         private void Search_Temp_Device(Area currentName)
         {            
             try
@@ -272,7 +283,7 @@ namespace BIS_DeviceTool
         private void dgv_Area_CellDoubleClick(object sender, DataGridViewCellEventArgs e)
         {
             Console.WriteLine($"dgv_Area_CellClick({e.ColumnIndex}, {e.RowIndex})");
-            if (e.RowIndex < 0 ) return; //|| e.RowIndex == dgv_Area.RowCount
+            if (e.ColumnIndex < 0 || e.RowIndex < 0 ) return; //|| e.RowIndex == dgv_Area.RowCount
             try
             {
                 switch (e.ColumnIndex)
@@ -286,7 +297,7 @@ namespace BIS_DeviceTool
 
                         object ev = dgv_Area[e.ColumnIndex, e.RowIndex].Value;
                         DataGridViewComboBoxCell CommandCell = new DataGridViewComboBoxCell();
-                        CommandCell.Items.Add(string.Empty);
+                        CommandCell.Items.Clear();//.Add(string.Empty);
                         foreach (Command command in CommandList)
                             CommandCell.Items.Add(command.Name);
                         CommandCell.Value = ev ?? string.Empty;
