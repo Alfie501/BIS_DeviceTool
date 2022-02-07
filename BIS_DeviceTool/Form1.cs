@@ -1,16 +1,10 @@
-﻿using MyXmlTool;
+﻿using CviVisaDriver;
+using MyXmlTool;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Forms;
-using CviVisaDriver;
 using System.Threading;
+using System.Windows.Forms;
 
 namespace BIS_DeviceTool
 {
@@ -30,13 +24,13 @@ namespace BIS_DeviceTool
 
         Area Current_Area;
         Model Current_Model;
-        Command Current_Command;        
+        Command Current_Command;
 
         //**********************************//
-        private List<DataGridViewRow> CopiedDgvRows = new List<DataGridViewRow>();
-        private List<Command> copiedItems = new List<Command>();
-        private Command m_ThisCommand;
-        public Command ThisCommand { get => m_ThisCommand; set => m_ThisCommand = value; }
+        //private List<DataGridViewRow> CopiedDgvRows = new List<DataGridViewRow>();
+        private List<Commandline> copiedItems = new List<Commandline>();
+        //private Command m_ThisCommand;
+        //public Command ThisCommand { get => m_ThisCommand; set => m_ThisCommand = value; }
         //**********************************//
         public Form1()
         {
@@ -49,7 +43,7 @@ namespace BIS_DeviceTool
             isLoad = true;
 
             TsBtn_Enable_Setting();
-            
+
             LoadAreaList();
             LoadCommandList();
 
@@ -68,6 +62,8 @@ namespace BIS_DeviceTool
                 tsCmb_IP.Items.Add(model.IP);
 
             isAreaSetting = false;
+            Current_Command = CommandList[CommandList.FindIndex(x => x.Name == Current_Area.CommandID)];
+            tsCmb_CommandName.Text = Current_Command.Name;
         }
         private void TsCmbIP_SelectedIndexChanged(object sender, EventArgs e)
         {
@@ -84,15 +80,6 @@ namespace BIS_DeviceTool
                 WriteCommand(_NIDriver[Current_Model.IP], "*IDN?");
                 txt_SN.Text = ReadResponse(_NIDriver[Current_Model.IP], Current_Model.IP).Split(',')[2];
 
-                dgv_On.Rows.Clear();
-                Current_Command = CommandList[CommandList.FindIndex(x => x.ID == Current_Area.CommandID)];
-                tsTxt_CommandName.Text = Current_Area.CommandID;
-                //Current_Command = CommandList[CommandList.FindIndex(x => x.ID == Current_Model.CommandID)];
-                //tsTxt_CommandName.Text = Current_Command.Name;
-                foreach (Commandline command in Current_Command.OnCommands)
-                    dgv_On.Rows.Add(new object[] { command.Active, command.Line });
-                foreach (Commandline command in Current_Command.OffCommands)
-                    dgv_Off.Rows.Add(new object[] { command.Active, command.Line });
             }
             catch (Exception ex)
             {
@@ -112,16 +99,16 @@ namespace BIS_DeviceTool
                     Parity = SerialParity.None,
                     shortDataBits = 8,
                     StopBits = SerialStopBitsMode.One,
-                    nBaudrate = 9600,
+                    nBaudrate = 38400,
                     nInterface = (int)InterfaceType.INTERFACE_ENET,
-                    strConnectInfo = $"{Current_Model.IP}::2021"
+                    strConnectInfo = $"{Current_Model.IP}::2101"
                 }))
                 {
                     cviVisaCtrl.SetEos(TerminationType.TERMCHAR_LF, 0x0A);
                 }
                 else
                 {
-                    throw new Exception($"Device Connect Fail (IP:{Current_Model.IP})");
+                    throw new Exception($"Device Connect Fail (IP:{Current_Model.IP}::2101)");
                 }
                 return cviVisaCtrl;
             }
@@ -131,13 +118,14 @@ namespace BIS_DeviceTool
         {
             try
             {
-                for (int i = 0; i < dgv_On.RowCount; i++) {
-                    if((bool)dgv_On[0, i].Value == true)
+                for (int i = 0; i < dgv_On.RowCount; i++)
+                {
+                    if ((bool)dgv_On[0, i].Value == true)
                     {
-                        WriteCommand(_NIDriver[Current_Model.IP], dgv_On[1,i].ToString());
+                        WriteCommand(_NIDriver[Current_Model.IP], dgv_On[1, i].ToString());
                     }
-                    else                    
-                        continue;                    
+                    else
+                        continue;
                 }
             }
             catch (Exception ex)
@@ -181,22 +169,15 @@ namespace BIS_DeviceTool
         }
         private void RowsCopy(bool isCut)
         {
-            if (CopiedDgvRows.Count > 0) CopiedDgvRows.Clear();
             if (copiedItems.Count > 0) copiedItems.Clear();
 
-            if (tabControl1.Controls.Owner == tabPage1)
+            if (tabControl1.SelectedIndex==0)
             {
                 foreach (DataGridViewRow row in dgv_On.SelectedRows)
                 {
                     try
                     {
-                        DataGridViewRow clonedRow = (DataGridViewRow)row.Clone();
-
-                        for (int i = 0; i < row.Cells.Count; i++)
-                            clonedRow.Cells[i].Value = row.Cells[i].Value;
-
-                        CopiedDgvRows.Add(clonedRow);
-                        copiedItems.Add(ThisCommand.Items[row.Index].Clone());
+                        copiedItems.Add(Current_Command.OnCommands[row.Index].Clone());
                     }
                     catch { }
                 }
@@ -204,24 +185,17 @@ namespace BIS_DeviceTool
                 {
                     foreach (DataGridViewRow row in dgv_On.SelectedRows)
                     {
-                        ThisCommand.Items.RemoveAt(row.Index);
-                        dgv_On.Rows.RemoveAt(row.Index);
+                        Current_Command.OnCommands.RemoveAt(row.Index);
                     }
                 }
             }
-            else if (tabControl1.Controls.Owner == tabPage2)
+            else /*if (tabControl1.Controls.Owner == tabPage2)*/
             {
                 foreach (DataGridViewRow row in dgv_Off.SelectedRows)
                 {
                     try
                     {
-                        DataGridViewRow clonedRow = (DataGridViewRow)row.Clone();
-
-                        for (int i = 0; i < row.Cells.Count; i++)
-                            clonedRow.Cells[i].Value = row.Cells[i].Value;
-
-                        CopiedDgvRows.Add(clonedRow);
-                        copiedItems.Add(ThisCommand.Items[row.Index].Clone());
+                        copiedItems.Add(Current_Command.OffCommands[row.Index].Clone());
                     }
                     catch { }
                 }
@@ -229,64 +203,68 @@ namespace BIS_DeviceTool
                 {
                     foreach (DataGridViewRow row in dgv_Off.SelectedRows)
                     {
-                        ThisCommand.Items.RemoveAt(row.Index);
-                        dgv_Off.Rows.RemoveAt(row.Index);
+                        Current_Command.OffCommands.RemoveAt(row.Index);
                     }
                 }
             }
-            
+
+            TsTxtCmdName_TextChanged(null, null);
         }
         private void TsBtn_Paste_Click(object sender, EventArgs e)
         {
             try
             {
-                if (CopiedDgvRows.Count > 0)
+                if (copiedItems.Count > 0)
                 {
-                    if (tabControl1.Controls.Owner == tabPage1)
+                    if (tabControl1.SelectedIndex == 0)
                     {
                         if (dgv_On.SelectedRows.Count > 0)
                         {
-                            for (int i = CopiedDgvRows.Count - 1, rIdx = dgv_On.SelectedRows[0].Index + 1; i >= 0; i--, rIdx++)
+                            for (int i = copiedItems.Count - 1, rIdx = dgv_On.SelectedRows[0].Index + 1; i >= 0; i--, rIdx++)
                             {
-                                dgv_On.Rows.Insert(rIdx, CopiedDgvRows[i]);
-                                ThisCommand.Items.Insert(rIdx, copiedItems[i]);
+                                if (rIdx > Current_Command.OnCommands.Count)
+                                    Current_Command.OnCommands.Add(copiedItems[i]);
+                                else
+                                    Current_Command.OnCommands.Insert(rIdx, copiedItems[i]);
                             }
                         }
                         else
                         {
-                            for (int i = CopiedDgvRows.Count - 1; i >= 0; i--)
+                            for (int i = copiedItems.Count - 1; i >= 0; i--)
                             {
-                                dgv_On.Rows.Add(CopiedDgvRows[i]);
-                                ThisCommand.Items.Add(copiedItems[i]);
+                                Current_Command.OnCommands.Add(copiedItems[i]);
                             }
                         }
                     }
-                    else if (tabControl1.Controls.Owner == tabPage2)
+                    else /*if (tabControl1.Controls.Owner == tabPage2)*/
                     {
                         if (dgv_Off.SelectedRows.Count > 0)
                         {
-                            for (int i = CopiedDgvRows.Count - 1, rIdx = dgv_Off.SelectedRows[0].Index + 1; i >= 0; i--, rIdx++)
+                            for (int i = copiedItems.Count - 1, rIdx = dgv_Off.SelectedRows[0].Index + 1; i >= 0; i--, rIdx++)
                             {
-                                dgv_Off.Rows.Insert(rIdx, CopiedDgvRows[i]);
-                                ThisCommand.Items.Insert(rIdx, copiedItems[i]);
+                                if (rIdx > Current_Command.OffCommands.Count)
+                                    Current_Command.OffCommands.Add(copiedItems[i]);
+                                else
+                                    Current_Command.OffCommands.Insert(rIdx, copiedItems[i]);
                             }
                         }
                         else
                         {
-                            for (int i = CopiedDgvRows.Count - 1; i >= 0; i--)
+                            for (int i = copiedItems.Count - 1; i >= 0; i--)
                             {
-                                dgv_Off.Rows.Add(CopiedDgvRows[i]);
-                                ThisCommand.Items.Add(copiedItems[i]);
+                                Current_Command.OffCommands.Add(copiedItems[i]);
                             }
                         }
                     }
+                    TsTxtCmdName_TextChanged(null, null);
                 }
                 else
                 {
                     MessageBox.Show("No Selected Row");
                 }
             }
-            catch (Exception ex) {
+            catch (Exception ex)
+            {
 
                 if (isRoot)
                     MessageBox.Show(ex.ToString());
@@ -298,24 +276,24 @@ namespace BIS_DeviceTool
         {
             try
             {
-                if (tabControl1.Controls.Owner == tabPage1)
+                if (tabControl1.SelectedIndex == 0)
                 {
                     foreach (DataGridViewRow row in dgv_On.SelectedRows)
                     {
-                        ThisCommand.Items.RemoveAt(row.Index);
-                        dgv_On.Rows.Remove(row);
+                        Current_Command.OnCommands.RemoveAt(row.Index);
                     }
                 }
-                else if(tabControl1.Controls.Owner == tabPage2)
+                else /*if (tabControl1.Controls.Owner == tabPage2)*/
                 {
                     foreach (DataGridViewRow row in dgv_Off.SelectedRows)
                     {
-                        ThisCommand.Items.RemoveAt(row.Index);
-                        dgv_Off.Rows.Remove(row);
+                        Current_Command.OffCommands.RemoveAt(row.Index);
                     }
                 }
+                TsTxtCmdName_TextChanged(null, null);
             }
-            catch (Exception ex) {
+            catch (Exception ex)
+            {
                 if (isRoot)
                     MessageBox.Show(ex.ToString());
                 else
@@ -324,12 +302,12 @@ namespace BIS_DeviceTool
         }
         private void TsBtn_Save_Click(object sender, EventArgs e)
         {
-            if (tsTxt_CommandName.Text == string.Empty)
+            if (tsCmb_CommandName.Text == string.Empty)
             {
                 Console.WriteLine("You need to enter the CommandName.");
                 return;
             }
-            else if(CmdNameHasChanged)
+            else if (CmdNameHasChanged)
             {
                 dgv_On.EndEdit();
                 dgv_Off.EndEdit();
@@ -338,10 +316,10 @@ namespace BIS_DeviceTool
                 {
                     case DialogResult.Yes:
                         //CommandList.Add(Cmd_Setting($"{CommandList.Count:d4}", tsTxt_CommandName.Text));
-                        Current_Command = Cmd_Setting($"{CommandList.Count:d4}", tsTxt_CommandName.Text);                        
+                        Current_Command = Cmd_Setting($"{CommandList.Count:d4}", tsCmb_CommandName.Text);
                         break;
                     case DialogResult.No:
-                        Current_Command = Cmd_Setting(Current_Command.ID, tsTxt_CommandName.Text);                        
+                        Current_Command = Cmd_Setting(Current_Command.ID, tsCmb_CommandName.Text);
                         break;
                     case DialogResult.Cancel:
                         return;
@@ -349,10 +327,10 @@ namespace BIS_DeviceTool
             }
             else Current_Command = Cmd_Setting(Current_Command.ID, Current_Command.Name);
 
-            int cmdList_idx = CommandList.FindIndex(x => x.Name == tsTxt_CommandName.Text);
+            int cmdList_idx = CommandList.FindIndex(x => x.Name == tsCmb_CommandName.Text);
             if (cmdList_idx >= 0)
             {
-                Current_Command = CommandList[CommandList.FindIndex(x => x.Name == tsTxt_CommandName.Text)];
+                Current_Command = CommandList[CommandList.FindIndex(x => x.Name == tsCmb_CommandName.Text)];
                 CommandList[cmdList_idx] = Current_Command;
             }
             else
@@ -368,8 +346,19 @@ namespace BIS_DeviceTool
         }
         private void TsTxtCmdName_TextChanged(object sender, EventArgs e)
         {
-            if (isDeviceChanging) return;
+            if (isLoad || isDeviceChanging || isAreaSetting) return;
+            if (Current_Area is null) return;
             CmdNameHasChanged = true;
+
+            dgv_On.Rows.Clear();
+            dgv_Off.Rows.Clear();
+            Current_Command = CommandList[CommandList.FindIndex(x => x.Name == tsCmb_CommandName.Text)];
+            //Current_Command = CommandList[CommandList.FindIndex(x => x.ID == Current_Model.CommandID)];
+            //tsTxt_CommandName.Text = Current_Command.Name;
+            foreach (Commandline command in Current_Command.OnCommands)
+                dgv_On.Rows.Add(new object[] { command.Active, command.Line });
+            foreach (Commandline command in Current_Command.OffCommands)
+                dgv_Off.Rows.Add(new object[] { command.Active, command.Line });
         }
         private Command Cmd_Setting(string ID, string Name)
         {
@@ -436,6 +425,8 @@ namespace BIS_DeviceTool
             {
                 CommandList = XmlUtil.Deserialize(typeof(List<Command>), CommandList_Text) as List<Command>;
             }
+            foreach (Command command in CommandList)
+                tsCmb_CommandName.Items.Add(command.Name);
         }
 
         protected void WriteCommand(CviVisaCtrl NIDriver, object Command)
@@ -486,6 +477,14 @@ namespace BIS_DeviceTool
                 dgv_Off.Rows.Clear();
             }
             catch { }
+        }
+
+        private void Dgv_On_CellClick(object sender, DataGridViewCellEventArgs e)
+        {
+            if (e.RowIndex < 0) return;
+            else
+            if (e.ColumnIndex == 0)
+                ((DataGridView)sender).Rows[e.RowIndex].Selected = true;
         }
     }
 }

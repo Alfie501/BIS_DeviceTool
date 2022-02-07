@@ -47,7 +47,7 @@
             this.dataGridViewCheckBoxColumn1 = new System.Windows.Forms.DataGridViewCheckBoxColumn();
             this.dataGridViewTextBoxColumn1 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.toolStrip2 = new System.Windows.Forms.ToolStrip();
-            this.tsTxt_CommandName = new System.Windows.Forms.ToolStripTextBox();
+            this.tsCmb_CommandName = new System.Windows.Forms.ToolStripComboBox();
             this.tsBtn_Copy = new System.Windows.Forms.ToolStripButton();
             this.tsBtn_Cut = new System.Windows.Forms.ToolStripButton();
             this.tsBtn_Paste = new System.Windows.Forms.ToolStripButton();
@@ -156,6 +156,7 @@
             this.dgv_On.RowTemplate.Height = 24;
             this.dgv_On.Size = new System.Drawing.Size(485, 325);
             this.dgv_On.TabIndex = 2;
+            this.dgv_On.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.Dgv_On_CellClick);
             this.dgv_On.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgv_On_CellContentClick);
             // 
             // Column1
@@ -205,6 +206,7 @@
             this.dgv_Off.RowTemplate.Height = 24;
             this.dgv_Off.Size = new System.Drawing.Size(485, 325);
             this.dgv_Off.TabIndex = 3;
+            this.dgv_Off.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.Dgv_On_CellClick);
             // 
             // dataGridViewCheckBoxColumn1
             // 
@@ -225,7 +227,7 @@
             // toolStrip2
             // 
             this.toolStrip2.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.tsTxt_CommandName,
+            this.tsCmb_CommandName,
             this.tsBtn_Copy,
             this.tsBtn_Cut,
             this.tsBtn_Paste,
@@ -240,11 +242,12 @@
             this.toolStrip2.TabIndex = 1;
             this.toolStrip2.Text = "toolStrip2";
             // 
-            // tsTxt_CommandName
+            // tsCmb_CommandName
             // 
-            this.tsTxt_CommandName.Name = "tsTxt_CommandName";
-            this.tsTxt_CommandName.Size = new System.Drawing.Size(100, 25);
-            this.tsTxt_CommandName.TextChanged += new System.EventHandler(this.TsTxtCmdName_TextChanged);
+            this.tsCmb_CommandName.FlatStyle = System.Windows.Forms.FlatStyle.Standard;
+            this.tsCmb_CommandName.Name = "tsCmb_CommandName";
+            this.tsCmb_CommandName.Size = new System.Drawing.Size(100, 25);
+            this.tsCmb_CommandName.TextChanged += new System.EventHandler(this.TsTxtCmdName_TextChanged);
             // 
             // tsBtn_Copy
             // 
@@ -565,7 +568,6 @@
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanel4;
         private System.Windows.Forms.Button btn_On;
         private System.Windows.Forms.Button btn_Off;
-        private System.Windows.Forms.ToolStripTextBox tsTxt_CommandName;
         private System.Windows.Forms.TabControl tabControl1;
         private System.Windows.Forms.TabPage tabPage1;
         private System.Windows.Forms.DataGridView dgv_On;
@@ -576,6 +578,7 @@
         private System.Windows.Forms.DataGridViewCheckBoxColumn Column1;
         private System.Windows.Forms.DataGridViewTextBoxColumn Column2;
         private System.Windows.Forms.ToolStripButton toolStripButton1;
+        private System.Windows.Forms.ToolStripComboBox tsCmb_CommandName;
     }
 }
 

@@ -68,7 +68,7 @@ namespace BIS_DeviceTool
         public string Name { get => m_Name; set => m_Name = value; }
         public List<Commandline> OnCommands { get => m_OnCommands; set => m_OnCommands = value; }
         public List<Commandline> OffCommands { get => m_OffCommands; set => m_OffCommands = value; }
-        //**********************************//
+        /**********************************
         private List<Command> m_Items;
         public List<Command> Items
         {
@@ -80,12 +80,12 @@ namespace BIS_DeviceTool
             }
             set => m_Items = value;
         }
+        **********************************/
         public Command Clone() => new Command()
         {
             OnCommands = OnCommands,
             OffCommands = OffCommands
         };
-        //**********************************//
 
     }
 
@@ -104,6 +104,6 @@ namespace BIS_DeviceTool
 
         public bool Active { get => m_Active; set => m_Active = value; }
         public string Line { get => m_line; set => m_line = value; }
-        
+        public Commandline Clone() => new Commandline(Active, Line);
     }
 }

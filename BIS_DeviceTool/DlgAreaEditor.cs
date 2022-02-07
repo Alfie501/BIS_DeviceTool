@@ -192,6 +192,30 @@ namespace BIS_DeviceTool
             }
             return temp_Area;
         }
+
+        private void Dgv_Area_CellClick(object sender, DataGridViewCellEventArgs e)
+        {
+            Console.WriteLine($"Dgv_Area_CellClick({e.ColumnIndex}, {e.RowIndex})");
+            if (e.RowIndex < 0) return;
+            switch (e.ColumnIndex)
+            {
+                case (int)ColDgv_Area.AreaName:
+                    tsBtn_Clear.PerformClick();
+
+                    Area_Name = dgv_Area[e.ColumnIndex , e.RowIndex].Value.ToString();
+                    Command_Name = dgv_Area[e.ColumnIndex+1, e.RowIndex].Value.ToString();
+                    currentName = AreaList[AreaList.FindIndex(x => x.Name == Area_Name)];
+
+                    Search_Temp_Device(currentName);
+                    break;
+
+                case (int)ColDgv_Area.CommandName:
+                    break;
+
+                default:
+                    break;
+            }
+        }
         private void Dgv_Area_CellContentClick(object sender, DataGridViewCellEventArgs e)
         {
             Console.WriteLine($"Dgv_Area_CellContentClick({e.ColumnIndex}, {e.RowIndex})");
@@ -342,7 +366,5 @@ namespace BIS_DeviceTool
         }
         enum ColDgv_Area { CheckBox, AreaName, CommandName }
         enum ColDgv_Device { CheckBox, ModelName, IP }
-
-        
     }
 }
