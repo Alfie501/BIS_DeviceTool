@@ -119,6 +119,7 @@
             this.dgv_Area.ShowRowErrors = false;
             this.dgv_Area.Size = new System.Drawing.Size(328, 260);
             this.dgv_Area.TabIndex = 0;
+            this.dgv_Area.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.Dgv_Area_CellClick);
             this.dgv_Area.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.Dgv_Area_CellContentClick);
             this.dgv_Area.CellDoubleClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.Dgv_Area_CellDoubleClick);
             this.dgv_Area.CellValueChanged += new System.Windows.Forms.DataGridViewCellEventHandler(this.Dgv_Area_CellValueChanged);
@@ -173,7 +174,7 @@
             this.dgv_Device.RowTemplate.Height = 24;
             this.dgv_Device.Size = new System.Drawing.Size(368, 260);
             this.dgv_Device.TabIndex = 0;
-            this.dgv_Device.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.Dgv_Device_CellClick);            
+            this.dgv_Device.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.Dgv_Device_CellClick);
             this.dgv_Device.CellValueChanged += new System.Windows.Forms.DataGridViewCellEventHandler(this.Dgv_Device_CellValueChanged);
             // 
             // dataGridViewCheckBoxColumn1
