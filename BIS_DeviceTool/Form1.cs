@@ -30,8 +30,14 @@ namespace BIS_DeviceTool
 
         Area Current_Area;
         Model Current_Model;
-        Command Current_Command;
+        Command Current_Command;        
 
+        //**********************************//
+        private List<DataGridViewRow> CopiedDgvRows = new List<DataGridViewRow>();
+        private List<Command> copiedItems = new List<Command>();
+        private Command m_ThisCommand;
+        public Command ThisCommand { get => m_ThisCommand; set => m_ThisCommand = value; }
+        //**********************************//
         public Form1()
         {
             InitializeComponent();
@@ -54,6 +60,7 @@ namespace BIS_DeviceTool
         {
             if (isLoad) return;
             isAreaSetting = true;
+            tsCmb_IP.Text = string.Empty;
 
             Current_Area = AreaList[AreaList.FindIndex(x => x.Name == tsCmb_Area.Text)];
             tsCmb_IP.Items.Clear();
@@ -78,8 +85,10 @@ namespace BIS_DeviceTool
                 txt_SN.Text = ReadResponse(_NIDriver[Current_Model.IP], Current_Model.IP).Split(',')[2];
 
                 dgv_On.Rows.Clear();
-                Current_Command = CommandList[CommandList.FindIndex(x => x.ID == Current_Model.CommandID)];
-                tsTxt_CommandName.Text = Current_Command.Name;
+                Current_Command = CommandList[CommandList.FindIndex(x => x.ID == Current_Area.CommandID)];
+                tsTxt_CommandName.Text = Current_Area.CommandID;
+                //Current_Command = CommandList[CommandList.FindIndex(x => x.ID == Current_Model.CommandID)];
+                //tsTxt_CommandName.Text = Current_Command.Name;
                 foreach (Commandline command in Current_Command.OnCommands)
                     dgv_On.Rows.Add(new object[] { command.Active, command.Line });
                 foreach (Commandline command in Current_Command.OffCommands)
@@ -123,7 +132,12 @@ namespace BIS_DeviceTool
             try
             {
                 for (int i = 0; i < dgv_On.RowCount; i++) {
-
+                    if((bool)dgv_On[0, i].Value == true)
+                    {
+                        WriteCommand(_NIDriver[Current_Model.IP], dgv_On[1,i].ToString());
+                    }
+                    else                    
+                        continue;                    
                 }
             }
             catch (Exception ex)
@@ -136,36 +150,198 @@ namespace BIS_DeviceTool
         }
         private void Btn_Off_Click(object sender, EventArgs e)
         {
-
+            try
+            {
+                for (int i = 0; i < dgv_Off.RowCount; i++)
+                {
+                    if ((bool)dgv_Off[0, i].Value == true)
+                    {
+                        WriteCommand(_NIDriver[Current_Model.IP], dgv_Off[1, i].ToString());
+                    }
+                    else
+                        continue;
+                }
+            }
+            catch (Exception ex)
+            {
+                if (isRoot)
+                    MessageBox.Show(ex.ToString());
+                else
+                    MessageBox.Show(ex.Message);
+            }
         }
 
         private void TsBtn_Copy_Click(object sender, EventArgs e)
         {
-
+            RowsCopy(false);
         }
         private void TsBtn_Cut_Click(object sender, EventArgs e)
         {
+            RowsCopy(true);
+        }
+        private void RowsCopy(bool isCut)
+        {
+            if (CopiedDgvRows.Count > 0) CopiedDgvRows.Clear();
+            if (copiedItems.Count > 0) copiedItems.Clear();
 
+            if (tabControl1.Controls.Owner == tabPage1)
+            {
+                foreach (DataGridViewRow row in dgv_On.SelectedRows)
+                {
+                    try
+                    {
+                        DataGridViewRow clonedRow = (DataGridViewRow)row.Clone();
+
+                        for (int i = 0; i < row.Cells.Count; i++)
+                            clonedRow.Cells[i].Value = row.Cells[i].Value;
+
+                        CopiedDgvRows.Add(clonedRow);
+                        copiedItems.Add(ThisCommand.Items[row.Index].Clone());
+                    }
+                    catch { }
+                }
+                if (isCut)
+                {
+                    foreach (DataGridViewRow row in dgv_On.SelectedRows)
+                    {
+                        ThisCommand.Items.RemoveAt(row.Index);
+                        dgv_On.Rows.RemoveAt(row.Index);
+                    }
+                }
+            }
+            else if (tabControl1.Controls.Owner == tabPage2)
+            {
+                foreach (DataGridViewRow row in dgv_Off.SelectedRows)
+                {
+                    try
+                    {
+                        DataGridViewRow clonedRow = (DataGridViewRow)row.Clone();
+
+                        for (int i = 0; i < row.Cells.Count; i++)
+                            clonedRow.Cells[i].Value = row.Cells[i].Value;
+
+                        CopiedDgvRows.Add(clonedRow);
+                        copiedItems.Add(ThisCommand.Items[row.Index].Clone());
+                    }
+                    catch { }
+                }
+                if (isCut)
+                {
+                    foreach (DataGridViewRow row in dgv_Off.SelectedRows)
+                    {
+                        ThisCommand.Items.RemoveAt(row.Index);
+                        dgv_Off.Rows.RemoveAt(row.Index);
+                    }
+                }
+            }
+            
         }
         private void TsBtn_Paste_Click(object sender, EventArgs e)
         {
+            try
+            {
+                if (CopiedDgvRows.Count > 0)
+                {
+                    if (tabControl1.Controls.Owner == tabPage1)
+                    {
+                        if (dgv_On.SelectedRows.Count > 0)
+                        {
+                            for (int i = CopiedDgvRows.Count - 1, rIdx = dgv_On.SelectedRows[0].Index + 1; i >= 0; i--, rIdx++)
+                            {
+                                dgv_On.Rows.Insert(rIdx, CopiedDgvRows[i]);
+                                ThisCommand.Items.Insert(rIdx, copiedItems[i]);
+                            }
+                        }
+                        else
+                        {
+                            for (int i = CopiedDgvRows.Count - 1; i >= 0; i--)
+                            {
+                                dgv_On.Rows.Add(CopiedDgvRows[i]);
+                                ThisCommand.Items.Add(copiedItems[i]);
+                            }
+                        }
+                    }
+                    else if (tabControl1.Controls.Owner == tabPage2)
+                    {
+                        if (dgv_Off.SelectedRows.Count > 0)
+                        {
+                            for (int i = CopiedDgvRows.Count - 1, rIdx = dgv_Off.SelectedRows[0].Index + 1; i >= 0; i--, rIdx++)
+                            {
+                                dgv_Off.Rows.Insert(rIdx, CopiedDgvRows[i]);
+                                ThisCommand.Items.Insert(rIdx, copiedItems[i]);
+                            }
+                        }
+                        else
+                        {
+                            for (int i = CopiedDgvRows.Count - 1; i >= 0; i--)
+                            {
+                                dgv_Off.Rows.Add(CopiedDgvRows[i]);
+                                ThisCommand.Items.Add(copiedItems[i]);
+                            }
+                        }
+                    }
+                }
+                else
+                {
+                    MessageBox.Show("No Selected Row");
+                }
+            }
+            catch (Exception ex) {
 
+                if (isRoot)
+                    MessageBox.Show(ex.ToString());
+                else
+                    MessageBox.Show(ex.Message);
+            }
         }
         private void TsBtn_Delete_Click(object sender, EventArgs e)
         {
-
+            try
+            {
+                if (tabControl1.Controls.Owner == tabPage1)
+                {
+                    foreach (DataGridViewRow row in dgv_On.SelectedRows)
+                    {
+                        ThisCommand.Items.RemoveAt(row.Index);
+                        dgv_On.Rows.Remove(row);
+                    }
+                }
+                else if(tabControl1.Controls.Owner == tabPage2)
+                {
+                    foreach (DataGridViewRow row in dgv_Off.SelectedRows)
+                    {
+                        ThisCommand.Items.RemoveAt(row.Index);
+                        dgv_Off.Rows.Remove(row);
+                    }
+                }
+            }
+            catch (Exception ex) {
+                if (isRoot)
+                    MessageBox.Show(ex.ToString());
+                else
+                    MessageBox.Show(ex.Message);
+            }
         }
         private void TsBtn_Save_Click(object sender, EventArgs e)
         {
-            if (CmdNameHasChanged)
+            if (tsTxt_CommandName.Text == string.Empty)
             {
+                Console.WriteLine("You need to enter the CommandName.");
+                return;
+            }
+            else if(CmdNameHasChanged)
+            {
+                dgv_On.EndEdit();
+                dgv_Off.EndEdit();
+
                 switch (MessageBox.Show("Command name has changed, save as new command?", string.Empty, MessageBoxButtons.YesNoCancel))
                 {
                     case DialogResult.Yes:
-                        CommandList.Add(Cmd_Setting($"{CommandList.Count:d4}", tsTxt_CommandName.Text));
+                        //CommandList.Add(Cmd_Setting($"{CommandList.Count:d4}", tsTxt_CommandName.Text));
+                        Current_Command = Cmd_Setting($"{CommandList.Count:d4}", tsTxt_CommandName.Text);                        
                         break;
                     case DialogResult.No:
-                        Current_Command = Cmd_Setting(Current_Command.ID, tsTxt_CommandName.Text);
+                        Current_Command = Cmd_Setting(Current_Command.ID, tsTxt_CommandName.Text);                        
                         break;
                     case DialogResult.Cancel:
                         return;
@@ -173,10 +349,17 @@ namespace BIS_DeviceTool
             }
             else Current_Command = Cmd_Setting(Current_Command.ID, Current_Command.Name);
 
-            int cmdList_idx = CommandList.FindIndex(x => x.ID == Current_Command.ID);
-            CommandList[cmdList_idx] = Current_Command;
+            int cmdList_idx = CommandList.FindIndex(x => x.Name == tsTxt_CommandName.Text);
+            if (cmdList_idx >= 0)
+            {
+                Current_Command = CommandList[CommandList.FindIndex(x => x.Name == tsTxt_CommandName.Text)];
+                CommandList[cmdList_idx] = Current_Command;
+            }
+            else
+                CommandList.Add(Current_Command);
 
             File.WriteAllText(CommandList_xml, XmlUtil.Serializer(typeof(List<Command>), CommandList));
+            CmdNameHasChanged = false;
         }
         private void TsBtn_Edit_Click(object sender, EventArgs e)
         {
@@ -191,11 +374,21 @@ namespace BIS_DeviceTool
         private Command Cmd_Setting(string ID, string Name)
         {
             Command temp_cmd = new Command(ID, Name);
-            for (int i = 0; i < dgv_On.RowCount; i++)
-                temp_cmd.OnCommands.Add(new Commandline((bool)dgv_On[0, i].Value, dgv_On[1, i].Value.ToString()));
 
-            for (int i = 0; i < dgv_Off.RowCount; i++)
-                temp_cmd.OffCommands.Add(new Commandline((bool)dgv_Off[0, i].Value, dgv_Off[1, i].Value.ToString()));
+            //for (int i = 0; i < dgv_On.RowCount - 1; i++)
+            //{
+            //    Commandline temp_cmdl = new Commandline();
+            //    temp_cmdl.Active = dgv_On[0, i].Selected;
+            //    temp_cmdl.Line = dgv_On[1, i].Value.ToString();
+            //    temp_cmd.OnCommands.Add(temp_cmdl);
+            //    //temp_cmd.OnCommands.Add(new Commandline((bool)dgv_On[0, i].Selected, dgv_On[1, i].Value.ToString()));
+            //}
+
+            for (int i = 0; i < dgv_On.RowCount - 1; i++)
+                temp_cmd.OnCommands.Add(new Commandline((bool)(dgv_On[0, i].Value ?? true), dgv_On[1, i].Value.ToString()));
+
+            for (int i = 0; i < dgv_Off.RowCount - 1; i++)
+                temp_cmd.OffCommands.Add(new Commandline((bool)(dgv_Off[0, i].Value ?? true), dgv_Off[1, i].Value.ToString()));
 
             return temp_cmd;
         }
@@ -223,6 +416,10 @@ namespace BIS_DeviceTool
             {
                 AreaList = XmlUtil.Deserialize(typeof(List<Area>), AreaList_Text) as List<Area>;
             }
+            List<string> areaNames = new List<string>();
+            foreach (Area area in AreaList)
+                areaNames.Add(area.Name);
+            tsCmb_Area.Items.AddRange(areaNames.ToArray());
         }
         private void LoadCommandList()
         {
@@ -259,5 +456,36 @@ namespace BIS_DeviceTool
 
             return ReturnString;
         }
- }
+
+        private void TsBtn_AppendArea_Click(object sender, EventArgs e)
+        {
+            DlgAreaEditor _DlgAreaEditor = null;
+            try
+            {
+                new Thread((ThreadStart)delegate
+                {
+                    _DlgAreaEditor = new DlgAreaEditor(AreaList, CommandList) { };
+                    Application.Run(_DlgAreaEditor);
+                }).Start();
+            }
+            catch (Exception ex) { Console.WriteLine(ex); }
+
+        }
+
+        private void dgv_On_CellContentClick(object sender, DataGridViewCellEventArgs e)
+        {
+            Console.WriteLine($"Dgv_Device_CellValueChanged({e.ColumnIndex}, {e.RowIndex})");
+            if (e.RowIndex < 0) return;
+        }
+
+        private void BtnClear1_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                dgv_On.Rows.Clear();
+                dgv_Off.Rows.Clear();
+            }
+            catch { }
+        }
+    }
 }
