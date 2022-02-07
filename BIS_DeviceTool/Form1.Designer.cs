@@ -32,9 +32,9 @@
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle6 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle4 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle5 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
             this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
             this.panel2 = new System.Windows.Forms.Panel();
             this.tabControl1 = new System.Windows.Forms.TabControl();
@@ -44,6 +44,8 @@
             this.Column2 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.tabPage2 = new System.Windows.Forms.TabPage();
             this.dgv_Off = new System.Windows.Forms.DataGridView();
+            this.dataGridViewCheckBoxColumn1 = new System.Windows.Forms.DataGridViewCheckBoxColumn();
+            this.dataGridViewTextBoxColumn1 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.toolStrip2 = new System.Windows.Forms.ToolStrip();
             this.tsTxt_CommandName = new System.Windows.Forms.ToolStripTextBox();
             this.tsBtn_Copy = new System.Windows.Forms.ToolStripButton();
@@ -52,6 +54,7 @@
             this.tsBtn_Delete = new System.Windows.Forms.ToolStripButton();
             this.tsBtn_Edit = new System.Windows.Forms.ToolStripButton();
             this.tsBtn_Save = new System.Windows.Forms.ToolStripButton();
+            this.toolStripButton1 = new System.Windows.Forms.ToolStripButton();
             this.panel1 = new System.Windows.Forms.Panel();
             this.tableLayoutPanel2 = new System.Windows.Forms.TableLayoutPanel();
             this.tableLayoutPanel3 = new System.Windows.Forms.TableLayoutPanel();
@@ -68,8 +71,6 @@
             this.toolStripLabel2 = new System.Windows.Forms.ToolStripLabel();
             this.tsCmb_IP = new System.Windows.Forms.ToolStripComboBox();
             this.tsBtn_AppendArea = new System.Windows.Forms.ToolStripButton();
-            this.dataGridViewCheckBoxColumn1 = new System.Windows.Forms.DataGridViewCheckBoxColumn();
-            this.dataGridViewTextBoxColumn1 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.tableLayoutPanel1.SuspendLayout();
             this.panel2.SuspendLayout();
             this.tabControl1.SuspendLayout();
@@ -98,7 +99,7 @@
             this.tableLayoutPanel1.RowCount = 2;
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 20.04049F));
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 79.95951F));
-            this.tableLayoutPanel1.Size = new System.Drawing.Size(422, 494);
+            this.tableLayoutPanel1.Size = new System.Drawing.Size(507, 494);
             this.tableLayoutPanel1.TabIndex = 0;
             // 
             // panel2
@@ -109,7 +110,7 @@
             this.panel2.Dock = System.Windows.Forms.DockStyle.Fill;
             this.panel2.Location = new System.Drawing.Point(3, 102);
             this.panel2.Name = "panel2";
-            this.panel2.Size = new System.Drawing.Size(416, 389);
+            this.panel2.Size = new System.Drawing.Size(501, 389);
             this.panel2.TabIndex = 1;
             // 
             // tabControl1
@@ -122,7 +123,7 @@
             this.tabControl1.Location = new System.Drawing.Point(0, 25);
             this.tabControl1.Name = "tabControl1";
             this.tabControl1.SelectedIndex = 0;
-            this.tabControl1.Size = new System.Drawing.Size(414, 362);
+            this.tabControl1.Size = new System.Drawing.Size(499, 362);
             this.tabControl1.TabIndex = 3;
             // 
             // tabPage1
@@ -132,14 +133,13 @@
             this.tabPage1.Location = new System.Drawing.Point(4, 4);
             this.tabPage1.Name = "tabPage1";
             this.tabPage1.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage1.Size = new System.Drawing.Size(406, 331);
+            this.tabPage1.Size = new System.Drawing.Size(491, 331);
             this.tabPage1.TabIndex = 0;
             this.tabPage1.Text = "On";
             this.tabPage1.UseVisualStyleBackColor = true;
             // 
             // dgv_On
             // 
-            this.dgv_On.AllowUserToDeleteRows = false;
             this.dgv_On.AllowUserToResizeRows = false;
             this.dgv_On.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
             this.dgv_On.BackgroundColor = System.Drawing.Color.White;
@@ -150,13 +150,13 @@
             this.dgv_On.Dock = System.Windows.Forms.DockStyle.Fill;
             this.dgv_On.Location = new System.Drawing.Point(3, 3);
             this.dgv_On.Name = "dgv_On";
-            this.dgv_On.ReadOnly = true;
             this.dgv_On.RowHeadersVisible = false;
             dataGridViewCellStyle3.Font = new System.Drawing.Font("Consolas", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.dgv_On.RowsDefaultCellStyle = dataGridViewCellStyle3;
             this.dgv_On.RowTemplate.Height = 24;
-            this.dgv_On.Size = new System.Drawing.Size(400, 325);
+            this.dgv_On.Size = new System.Drawing.Size(485, 325);
             this.dgv_On.TabIndex = 2;
+            this.dgv_On.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgv_On_CellContentClick);
             // 
             // Column1
             // 
@@ -166,7 +166,6 @@
             this.Column1.FillWeight = 10F;
             this.Column1.HeaderText = "";
             this.Column1.Name = "Column1";
-            this.Column1.ReadOnly = true;
             // 
             // Column2
             // 
@@ -174,7 +173,6 @@
             this.Column2.DefaultCellStyle = dataGridViewCellStyle2;
             this.Column2.HeaderText = "Command";
             this.Column2.Name = "Column2";
-            this.Column2.ReadOnly = true;
             // 
             // tabPage2
             // 
@@ -183,7 +181,7 @@
             this.tabPage2.Location = new System.Drawing.Point(4, 4);
             this.tabPage2.Name = "tabPage2";
             this.tabPage2.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage2.Size = new System.Drawing.Size(406, 331);
+            this.tabPage2.Size = new System.Drawing.Size(491, 331);
             this.tabPage2.TabIndex = 1;
             this.tabPage2.Text = "Off";
             this.tabPage2.UseVisualStyleBackColor = true;
@@ -201,13 +199,28 @@
             this.dgv_Off.Dock = System.Windows.Forms.DockStyle.Fill;
             this.dgv_Off.Location = new System.Drawing.Point(3, 3);
             this.dgv_Off.Name = "dgv_Off";
-            this.dgv_Off.ReadOnly = true;
             this.dgv_Off.RowHeadersVisible = false;
             dataGridViewCellStyle6.Font = new System.Drawing.Font("Consolas", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.dgv_Off.RowsDefaultCellStyle = dataGridViewCellStyle6;
             this.dgv_Off.RowTemplate.Height = 24;
-            this.dgv_Off.Size = new System.Drawing.Size(400, 325);
+            this.dgv_Off.Size = new System.Drawing.Size(485, 325);
             this.dgv_Off.TabIndex = 3;
+            // 
+            // dataGridViewCheckBoxColumn1
+            // 
+            dataGridViewCellStyle4.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            dataGridViewCellStyle4.NullValue = true;
+            this.dataGridViewCheckBoxColumn1.DefaultCellStyle = dataGridViewCellStyle4;
+            this.dataGridViewCheckBoxColumn1.FillWeight = 10F;
+            this.dataGridViewCheckBoxColumn1.HeaderText = "";
+            this.dataGridViewCheckBoxColumn1.Name = "dataGridViewCheckBoxColumn1";
+            // 
+            // dataGridViewTextBoxColumn1
+            // 
+            dataGridViewCellStyle5.Font = new System.Drawing.Font("Century", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.dataGridViewTextBoxColumn1.DefaultCellStyle = dataGridViewCellStyle5;
+            this.dataGridViewTextBoxColumn1.HeaderText = "Command";
+            this.dataGridViewTextBoxColumn1.Name = "dataGridViewTextBoxColumn1";
             // 
             // toolStrip2
             // 
@@ -218,11 +231,12 @@
             this.tsBtn_Paste,
             this.tsBtn_Delete,
             this.tsBtn_Edit,
-            this.tsBtn_Save});
+            this.tsBtn_Save,
+            this.toolStripButton1});
             this.toolStrip2.Location = new System.Drawing.Point(0, 0);
             this.toolStrip2.Name = "toolStrip2";
             this.toolStrip2.RenderMode = System.Windows.Forms.ToolStripRenderMode.System;
-            this.toolStrip2.Size = new System.Drawing.Size(414, 25);
+            this.toolStrip2.Size = new System.Drawing.Size(499, 25);
             this.toolStrip2.TabIndex = 1;
             this.toolStrip2.Text = "toolStrip2";
             // 
@@ -290,6 +304,15 @@
             this.tsBtn_Save.Text = "Save";
             this.tsBtn_Save.Click += new System.EventHandler(this.TsBtn_Save_Click);
             // 
+            // toolStripButton1
+            // 
+            this.toolStripButton1.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButton1.Image")));
+            this.toolStripButton1.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.toolStripButton1.Name = "toolStripButton1";
+            this.toolStripButton1.Size = new System.Drawing.Size(56, 22);
+            this.toolStripButton1.Text = "Clear";
+            this.toolStripButton1.Click += new System.EventHandler(this.BtnClear1_Click);
+            // 
             // panel1
             // 
             this.panel1.Controls.Add(this.tableLayoutPanel2);
@@ -298,7 +321,7 @@
             this.panel1.Font = new System.Drawing.Font("Century", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.panel1.Location = new System.Drawing.Point(3, 3);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(416, 93);
+            this.panel1.Size = new System.Drawing.Size(501, 93);
             this.panel1.TabIndex = 0;
             // 
             // tableLayoutPanel2
@@ -314,7 +337,7 @@
             this.tableLayoutPanel2.RowCount = 1;
             this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
             this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 68F));
-            this.tableLayoutPanel2.Size = new System.Drawing.Size(416, 68);
+            this.tableLayoutPanel2.Size = new System.Drawing.Size(501, 68);
             this.tableLayoutPanel2.TabIndex = 1;
             // 
             // tableLayoutPanel3
@@ -333,7 +356,7 @@
             this.tableLayoutPanel3.RowCount = 2;
             this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
             this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
-            this.tableLayoutPanel3.Size = new System.Drawing.Size(324, 62);
+            this.tableLayoutPanel3.Size = new System.Drawing.Size(392, 62);
             this.tableLayoutPanel3.TabIndex = 0;
             // 
             // txt_SN
@@ -342,10 +365,10 @@
             this.txt_SN.Dock = System.Windows.Forms.DockStyle.Fill;
             this.txt_SN.Enabled = false;
             this.txt_SN.Font = new System.Drawing.Font("Century", 11F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
-            this.txt_SN.Location = new System.Drawing.Point(118, 34);
+            this.txt_SN.Location = new System.Drawing.Point(142, 34);
             this.txt_SN.Name = "txt_SN";
             this.txt_SN.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
-            this.txt_SN.Size = new System.Drawing.Size(203, 25);
+            this.txt_SN.Size = new System.Drawing.Size(247, 25);
             this.txt_SN.TabIndex = 3;
             this.txt_SN.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
@@ -356,7 +379,7 @@
             this.label2.ForeColor = System.Drawing.Color.Maroon;
             this.label2.Location = new System.Drawing.Point(3, 31);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(109, 31);
+            this.label2.Size = new System.Drawing.Size(133, 31);
             this.label2.TabIndex = 2;
             this.label2.Text = "S/N";
             this.label2.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -368,7 +391,7 @@
             this.label1.ForeColor = System.Drawing.Color.Maroon;
             this.label1.Location = new System.Drawing.Point(3, 0);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(109, 31);
+            this.label1.Size = new System.Drawing.Size(133, 31);
             this.label1.TabIndex = 0;
             this.label1.Text = "Model Name";
             this.label1.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -379,10 +402,10 @@
             this.txt_ModelName.Dock = System.Windows.Forms.DockStyle.Fill;
             this.txt_ModelName.Enabled = false;
             this.txt_ModelName.Font = new System.Drawing.Font("Century", 11F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
-            this.txt_ModelName.Location = new System.Drawing.Point(118, 3);
+            this.txt_ModelName.Location = new System.Drawing.Point(142, 3);
             this.txt_ModelName.Name = "txt_ModelName";
             this.txt_ModelName.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
-            this.txt_ModelName.Size = new System.Drawing.Size(203, 25);
+            this.txt_ModelName.Size = new System.Drawing.Size(247, 25);
             this.txt_ModelName.TabIndex = 1;
             this.txt_ModelName.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
@@ -392,7 +415,7 @@
             this.tableLayoutPanel4.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
             this.tableLayoutPanel4.Controls.Add(this.btn_Off, 0, 1);
             this.tableLayoutPanel4.Controls.Add(this.btn_On, 0, 0);
-            this.tableLayoutPanel4.Location = new System.Drawing.Point(333, 3);
+            this.tableLayoutPanel4.Location = new System.Drawing.Point(401, 3);
             this.tableLayoutPanel4.Name = "tableLayoutPanel4";
             this.tableLayoutPanel4.RowCount = 2;
             this.tableLayoutPanel4.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
@@ -441,7 +464,7 @@
             this.toolStrip1.Location = new System.Drawing.Point(0, 0);
             this.toolStrip1.Name = "toolStrip1";
             this.toolStrip1.RenderMode = System.Windows.Forms.ToolStripRenderMode.Professional;
-            this.toolStrip1.Size = new System.Drawing.Size(416, 25);
+            this.toolStrip1.Size = new System.Drawing.Size(501, 25);
             this.toolStrip1.TabIndex = 0;
             this.toolStrip1.Text = "toolStrip1";
             // 
@@ -480,30 +503,13 @@
             this.tsBtn_AppendArea.Name = "tsBtn_AppendArea";
             this.tsBtn_AppendArea.Size = new System.Drawing.Size(23, 22);
             this.tsBtn_AppendArea.Text = "Append Area";
-            // 
-            // dataGridViewCheckBoxColumn1
-            // 
-            dataGridViewCellStyle4.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            dataGridViewCellStyle4.NullValue = true;
-            this.dataGridViewCheckBoxColumn1.DefaultCellStyle = dataGridViewCellStyle4;
-            this.dataGridViewCheckBoxColumn1.FillWeight = 10F;
-            this.dataGridViewCheckBoxColumn1.HeaderText = "";
-            this.dataGridViewCheckBoxColumn1.Name = "dataGridViewCheckBoxColumn1";
-            this.dataGridViewCheckBoxColumn1.ReadOnly = true;
-            // 
-            // dataGridViewTextBoxColumn1
-            // 
-            dataGridViewCellStyle5.Font = new System.Drawing.Font("Century", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.dataGridViewTextBoxColumn1.DefaultCellStyle = dataGridViewCellStyle5;
-            this.dataGridViewTextBoxColumn1.HeaderText = "Command";
-            this.dataGridViewTextBoxColumn1.Name = "dataGridViewTextBoxColumn1";
-            this.dataGridViewTextBoxColumn1.ReadOnly = true;
+            this.tsBtn_AppendArea.Click += new System.EventHandler(this.TsBtn_AppendArea_Click);
             // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(422, 494);
+            this.ClientSize = new System.Drawing.Size(507, 494);
             this.Controls.Add(this.tableLayoutPanel1);
             this.MaximizeBox = false;
             this.Name = "Form1";
@@ -542,7 +548,6 @@
         private System.Windows.Forms.ToolStripComboBox tsCmb_Area;
         private System.Windows.Forms.ToolStripLabel toolStripLabel2;
         private System.Windows.Forms.ToolStripComboBox tsCmb_IP;
-        private System.Windows.Forms.DataGridView dgv_On;
         private System.Windows.Forms.ToolStrip toolStrip2;
         private System.Windows.Forms.ToolStripButton tsBtn_Copy;
         private System.Windows.Forms.ToolStripButton tsBtn_Paste;
@@ -557,18 +562,20 @@
         private System.Windows.Forms.TextBox txt_ModelName;
         private System.Windows.Forms.ToolStripButton tsBtn_Cut;
         private System.Windows.Forms.ToolStripButton tsBtn_AppendArea;
-        private System.Windows.Forms.TabControl tabControl1;
-        private System.Windows.Forms.TabPage tabPage1;
-        private System.Windows.Forms.TabPage tabPage2;
-        private System.Windows.Forms.DataGridView dgv_Off;
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanel4;
         private System.Windows.Forms.Button btn_On;
         private System.Windows.Forms.Button btn_Off;
         private System.Windows.Forms.ToolStripTextBox tsTxt_CommandName;
-        private System.Windows.Forms.DataGridViewCheckBoxColumn Column1;
-        private System.Windows.Forms.DataGridViewTextBoxColumn Column2;
+        private System.Windows.Forms.TabControl tabControl1;
+        private System.Windows.Forms.TabPage tabPage1;
+        private System.Windows.Forms.DataGridView dgv_On;
+        private System.Windows.Forms.TabPage tabPage2;
+        private System.Windows.Forms.DataGridView dgv_Off;
         private System.Windows.Forms.DataGridViewCheckBoxColumn dataGridViewCheckBoxColumn1;
         private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn1;
+        private System.Windows.Forms.DataGridViewCheckBoxColumn Column1;
+        private System.Windows.Forms.DataGridViewTextBoxColumn Column2;
+        private System.Windows.Forms.ToolStripButton toolStripButton1;
     }
 }
 
