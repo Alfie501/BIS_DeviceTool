@@ -15,18 +15,18 @@ namespace BIS_DeviceTool
     public partial class DlgAreaEditor : Form
     {
         List<Area> AreaList;
-        List<Model> ModelList;
+        //List<Model> ModelList;
         List<Command> CommandList;
         //**********************************//
         string Area_Name { get; set; }
         string Command_Name { get; set; }
-        Area currentName;
-        Model CurrentCommand;
+        Area currentName;        
         Area temp_Area;
-        Command temp_cammand;
+        //Model CurrentCommand;
+        //Command temp_cammand;
 
-        bool IscurrentName = false;
-        bool IsCurrentModel = false;        
+        //bool IscurrentName = false;
+        //bool IsCurrentModel = false;
         bool IsDgvAreaHasChanged = false;
         bool IsDgvDeviceHasChanged = false;        
 
@@ -86,7 +86,7 @@ namespace BIS_DeviceTool
             }
             catch { }
         }
-        private void tsBtn_Delete_Click(object sender, EventArgs e)
+        private void TsBtn_Delete_Click(object sender, EventArgs e)
         {
             try
             {
@@ -116,7 +116,7 @@ namespace BIS_DeviceTool
             }
             catch (Exception ex) { Console.WriteLine(ex.ToString()); }
         }
-        private void tsBtn_NewDevice_Click(object sender, EventArgs e)
+        private void TsBtn_NewDevice_Click(object sender, EventArgs e)
         {
             if (dgv_Device == null) { MessageBox.Show("No Selected Sheet", "Error"); return; }
             try
@@ -126,7 +126,7 @@ namespace BIS_DeviceTool
             }
             catch (Exception ex) { Console.WriteLine(ex.ToString()); }
         }
-        private void tsBtn_Save_Click(object sender, EventArgs e)
+        private void TsBtn_Save_Click(object sender, EventArgs e)
         {
             #region pass
             //if (CmdHasChanged)
@@ -161,7 +161,6 @@ namespace BIS_DeviceTool
             ////int CMDList_Idx = AreaList.FindIndex(x => x.Name == currentName.Name);
             ////AreaList[CMDList_Idx] = currentName;
             #endregion
-
             switch (MessageBox.Show("Command name has changed, save as new command?", string.Empty, MessageBoxButtons.YesNoCancel))
             {
                 case DialogResult.Yes:
@@ -176,21 +175,24 @@ namespace BIS_DeviceTool
         }
         private Area Area_Setting(string AreaName, string CommandName)
         {
-            temp_Area = new Area(Name, CommandName);
-            temp_Area.Name = AreaName;
-            temp_Area.CommandID = CommandName;
-      
-            for (int j = 0; j < dgv_Device.RowCount - 1; j++)
-            {                
-                Model temp_Model = new Model();
-                temp_Model.Active = true;
-                temp_Model.Name = dgv_Device[1, j].Value.ToString();
-                temp_Model.IP = dgv_Device[1, j].Value.ToString();
+            temp_Area = new Area(Name, CommandName)
+            {
+                Name = AreaName,
+                CommandID = CommandName
+            };
+            for (int j = 0; j < dgv_Device.RowCount; j++)
+            {
+                Model temp_Model = new Model
+                {
+                    Active = true,
+                    Name = dgv_Device[1, j].Value.ToString(),
+                    IP = dgv_Device[2, j].Value.ToString()
+                };
                 temp_Area.Models.Add(temp_Model);
             }
             return temp_Area;
-        } 
-        private void dgv_Area_CellContentClick(object sender, DataGridViewCellEventArgs e)
+        }
+        private void Dgv_Area_CellContentClick(object sender, DataGridViewCellEventArgs e)
         {
             Console.WriteLine($"Dgv_Area_CellContentClick({e.ColumnIndex}, {e.RowIndex})");
             if (e.RowIndex < 0) return;
@@ -213,7 +215,7 @@ namespace BIS_DeviceTool
                     break;
             }
         }
-        private void dgv_Area_CellValueChanged(object sender, DataGridViewCellEventArgs e)
+        private void Dgv_Area_CellValueChanged(object sender, DataGridViewCellEventArgs e)
         {
             Console.WriteLine($"Dgv_Device_CellValueChanged({e.ColumnIndex}, {e.RowIndex})");
             if (e.RowIndex < 0) return;
@@ -221,10 +223,11 @@ namespace BIS_DeviceTool
             switch (e.ColumnIndex)
             {
                 case (int)ColDgv_Area.AreaName:
-                    Area_Name = dgv_Area[e.ColumnIndex, e.RowIndex].Value.ToString();
+                    //Area_Name = dgv_Area[e.ColumnIndex, e.RowIndex].Value.ToString();
                     break;
                 case (int)ColDgv_Area.CommandName:
                     IsDgvAreaHasChanged = true;
+                    Area_Name = dgv_Area[e.ColumnIndex-1, e.RowIndex].Value.ToString();
                     Command_Name = dgv_Area[e.ColumnIndex, e.RowIndex].Value.ToString();
                     break;
                 default:
@@ -253,20 +256,44 @@ namespace BIS_DeviceTool
                         return;
                     }
                     temp_Area = Area_Setting(Area_Name, Command_Name);
+
+                    if (IsDgvAreaHasChanged == false || IsDgvDeviceHasChanged == false)
+                    {
+                        Console.WriteLine($"DgvArea or DgvDevice didn't changed.");
+                        return;
+                    }
+                    else
+                    {
+                        int CMDList_found = AreaList.FindIndex(x => x.Name == Area_Name);
+                        if (CMDList_found >= 0)
+                        {
+                            //currentName = AreaList[AreaList.FindIndex(x => x.Name == Area_Name)];
+                            AreaList[CMDList_found] = temp_Area;//currentName;
+                        }
+                        else
+                            AreaList.Add(temp_Area);
+                        IsDgvAreaHasChanged = false;
+                        IsDgvDeviceHasChanged = false;
+                    }
                     break;
                 default:
                     break;
             }
-        }        
-        private void dgv_Device_Leave(object sender, EventArgs e)
+        }
+
+        private void Dgv_Device_Leave(object sender, EventArgs e)
         {
-            if (IsDgvAreaHasChanged == false || IsDgvDeviceHasChanged == false) return;
+            if (IsDgvAreaHasChanged == false || IsDgvDeviceHasChanged == false)
+            {
+                Console.WriteLine($"DgvArea or DgvDevice didn't changed.");
+                return;
+            }
 
             int CMDList_found = AreaList.FindIndex(x => x.Name == Area_Name);
             if (CMDList_found >= 0)
             {
-                currentName = AreaList[AreaList.FindIndex(x => x.Name == Area_Name)];
-                AreaList[CMDList_found] = currentName;                
+                //currentName = AreaList[AreaList.FindIndex(x => x.Name == Area_Name)];
+                AreaList[CMDList_found] = temp_Area;//currentName;
             }
             else
                 AreaList.Add(temp_Area);
@@ -274,13 +301,14 @@ namespace BIS_DeviceTool
             IsDgvAreaHasChanged = false;
             IsDgvDeviceHasChanged = false;
         }
-        private void dgv_Device_CellClick(object sender, DataGridViewCellEventArgs e)
+
+        private void Dgv_Device_CellClick(object sender, DataGridViewCellEventArgs e)
         {
             if (e.ColumnIndex == 0) {
                 dgv_Device.Rows[e.RowIndex].Selected = true;
             }
         }
-        private void dgv_Area_CellDoubleClick(object sender, DataGridViewCellEventArgs e)
+        private void Dgv_Area_CellDoubleClick(object sender, DataGridViewCellEventArgs e)
         {
             Console.WriteLine($"dgv_Area_CellClick({e.ColumnIndex}, {e.RowIndex})");
             if (e.ColumnIndex < 0 || e.RowIndex < 0 ) return; //|| e.RowIndex == dgv_Area.RowCount
@@ -314,5 +342,7 @@ namespace BIS_DeviceTool
         }
         enum ColDgv_Area { CheckBox, AreaName, CommandName }
         enum ColDgv_Device { CheckBox, ModelName, IP }
+
+        
     }
 }
