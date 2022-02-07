@@ -28,13 +28,16 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(DlgAreaEditor));
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
             this.panel1 = new System.Windows.Forms.Panel();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.grp_Area = new System.Windows.Forms.GroupBox();
             this.dgv_Area = new System.Windows.Forms.DataGridView();
+            this.Column1 = new System.Windows.Forms.DataGridViewCheckBoxColumn();
+            this.Column2 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.area_CommandName = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.grp_Device = new System.Windows.Forms.GroupBox();
             this.dgv_Device = new System.Windows.Forms.DataGridView();
             this.dataGridViewCheckBoxColumn1 = new System.Windows.Forms.DataGridViewCheckBoxColumn();
@@ -47,9 +50,6 @@
             this.tsBtn_Save = new System.Windows.Forms.ToolStripButton();
             this.tsBtn_Clear = new System.Windows.Forms.ToolStripButton();
             this.tsBtn_NewDevice = new System.Windows.Forms.ToolStripButton();
-            this.Column1 = new System.Windows.Forms.DataGridViewCheckBoxColumn();
-            this.Column2 = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.area_CommandName = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.panel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
@@ -119,7 +119,30 @@
             this.dgv_Area.ShowRowErrors = false;
             this.dgv_Area.Size = new System.Drawing.Size(328, 260);
             this.dgv_Area.TabIndex = 0;
-            this.dgv_Area.CellDoubleClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgv_Area_CellDoubleClick);
+            this.dgv_Area.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.Dgv_Area_CellContentClick);
+            this.dgv_Area.CellDoubleClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.Dgv_Area_CellDoubleClick);
+            this.dgv_Area.CellValueChanged += new System.Windows.Forms.DataGridViewCellEventHandler(this.Dgv_Area_CellValueChanged);
+            // 
+            // Column1
+            // 
+            dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            dataGridViewCellStyle1.NullValue = true;
+            this.Column1.DefaultCellStyle = dataGridViewCellStyle1;
+            this.Column1.FillWeight = 25F;
+            this.Column1.HeaderText = "";
+            this.Column1.Name = "Column1";
+            // 
+            // Column2
+            // 
+            this.Column2.HeaderText = "Area Name";
+            this.Column2.Name = "Column2";
+            // 
+            // area_CommandName
+            // 
+            this.area_CommandName.HeaderText = "Command Name";
+            this.area_CommandName.Name = "area_CommandName";
+            this.area_CommandName.Resizable = System.Windows.Forms.DataGridViewTriState.True;
+            this.area_CommandName.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
             // 
             // grp_Device
             // 
@@ -150,9 +173,8 @@
             this.dgv_Device.RowTemplate.Height = 24;
             this.dgv_Device.Size = new System.Drawing.Size(368, 260);
             this.dgv_Device.TabIndex = 0;
-            this.dgv_Device.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgv_Device_CellClick);
+            this.dgv_Device.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.Dgv_Device_CellClick);            
             this.dgv_Device.CellValueChanged += new System.Windows.Forms.DataGridViewCellEventHandler(this.Dgv_Device_CellValueChanged);
-            this.dgv_Device.Leave += new System.EventHandler(this.dgv_Device_Leave);
             // 
             // dataGridViewCheckBoxColumn1
             // 
@@ -205,7 +227,7 @@
             this.tsBtn_Delete.Name = "tsBtn_Delete";
             this.tsBtn_Delete.Size = new System.Drawing.Size(64, 22);
             this.tsBtn_Delete.Text = "Delete";
-            this.tsBtn_Delete.Click += new System.EventHandler(this.tsBtn_Delete_Click);
+            this.tsBtn_Delete.Click += new System.EventHandler(this.TsBtn_Delete_Click);
             // 
             // toolStripSeparator1
             // 
@@ -219,7 +241,7 @@
             this.tsBtn_Save.Name = "tsBtn_Save";
             this.tsBtn_Save.Size = new System.Drawing.Size(54, 22);
             this.tsBtn_Save.Text = "Save";
-            this.tsBtn_Save.Click += new System.EventHandler(this.tsBtn_Save_Click);
+            this.tsBtn_Save.Click += new System.EventHandler(this.TsBtn_Save_Click);
             // 
             // tsBtn_Clear
             // 
@@ -239,28 +261,7 @@
             this.tsBtn_NewDevice.Name = "tsBtn_NewDevice";
             this.tsBtn_NewDevice.Size = new System.Drawing.Size(91, 22);
             this.tsBtn_NewDevice.Text = "NewDevice";
-            this.tsBtn_NewDevice.Click += new System.EventHandler(this.tsBtn_NewDevice_Click);
-            // 
-            // Column1
-            // 
-            dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            dataGridViewCellStyle1.NullValue = true;
-            this.Column1.DefaultCellStyle = dataGridViewCellStyle1;
-            this.Column1.FillWeight = 25F;
-            this.Column1.HeaderText = "";
-            this.Column1.Name = "Column1";
-            // 
-            // Column2
-            // 
-            this.Column2.HeaderText = "Area Name";
-            this.Column2.Name = "Column2";
-            // 
-            // area_CommandName
-            // 
-            this.area_CommandName.HeaderText = "Command Name";
-            this.area_CommandName.Name = "area_CommandName";
-            this.area_CommandName.Resizable = System.Windows.Forms.DataGridViewTriState.True;
-            this.area_CommandName.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
+            this.tsBtn_NewDevice.Click += new System.EventHandler(this.TsBtn_NewDevice_Click);
             // 
             // DlgAreaEditor
             // 
